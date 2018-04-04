@@ -4,7 +4,7 @@
   
 
 ### Инструкция по установке и настройке:
-1. Загрузите архив модуля [bitrix-hutkigrosh.zip](https://github.com/esasby/hgrosh/tree/master/CMS/Plugins/Bitrix/bitrix-hutkigrosh.zip)
+1. Загрузите архив модуля [bitrix-hutkigrosh.zip](https://github.com/esasby/hutkigrosh-bitrix-module/blob/master/bitrix-hutkigrosh.zip)
 (кодировка cp-1251) 
 2. Распакуйте архив в папку 
 ```/bitrix/modules/```
