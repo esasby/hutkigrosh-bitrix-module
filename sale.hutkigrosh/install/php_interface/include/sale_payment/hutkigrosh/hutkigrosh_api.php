@@ -11,7 +11,7 @@ class HootkiGrosh
 {
     private static $cookies_file;
 
-    private $base_url; // url api
+    public $base_url; // url api
 
     private $ch; // curl object
     private $error; // ошибка запроса (если есть)
@@ -67,7 +67,7 @@ class HootkiGrosh
     public function __construct(HGConfig $config)
     {
         $this->config = $config;
-        if ($config->sandbox) {
+        if ($config->sandbox == '1') {
             $this->base_url = $this->test_api_url;
         } else {
             $this->base_url = $this->api_url;
@@ -506,7 +506,7 @@ class HootkiGrosh
         $headers = array('Content-Type: application/xml', 'Content-Length: ' . strlen($data));
 
         $this->ch = curl_init();
-
+        error_log('Connecting to ' . $this->base_url . $path, 3, '/home/daby/logs/bitrix/debug.log');
         curl_setopt($this->ch, CURLOPT_URL, $this->base_url . $path);
         curl_setopt($this->ch, CURLOPT_HEADER, false); // включение заголовков в выводе
         curl_setopt($this->ch, CURLOPT_VERBOSE, true); // вывод доп. информации в STDERR

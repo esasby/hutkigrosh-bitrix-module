@@ -160,7 +160,7 @@ function addBill(HootkiGrosh $hg, Order $order)
     if (!$billID) {
         $error = $hg->getError();
         $hg->apiLogOut(); // Завершаем сеанс
-        throw new Exception($error);
+        throw new Exception('Error while connecting to ' . $hg->base_url . ": " . $error);
     }
     //сохраним billid для данного заказа, может быть есть более подходящее место чем поле COMMENTS?
     CSaleOrder::Update($order->getId(), array("COMMENTS" => $billID));
