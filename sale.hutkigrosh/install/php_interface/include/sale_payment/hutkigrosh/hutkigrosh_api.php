@@ -506,7 +506,6 @@ class HootkiGrosh
         $headers = array('Content-Type: application/xml', 'Content-Length: ' . strlen($data));
 
         $this->ch = curl_init();
-        error_log('Connecting to ' . $this->base_url . $path, 3, '/home/daby/logs/bitrix/debug.log');
         curl_setopt($this->ch, CURLOPT_URL, $this->base_url . $path);
         curl_setopt($this->ch, CURLOPT_HEADER, false); // включение заголовков в выводе
         curl_setopt($this->ch, CURLOPT_VERBOSE, true); // вывод доп. информации в STDERR

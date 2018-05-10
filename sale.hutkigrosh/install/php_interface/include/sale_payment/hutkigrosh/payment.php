@@ -48,7 +48,7 @@ $hg->apiLogOut();
     <div class="alfaclick">
         <input type="text" maxlength="20" name="phone" value="<?= $GLOBALS["SALE_INPUT_PARAMS"]['PROPERTY']['PHONE'] ?>"
                id="phone">
-        <button class="sale-paysystem-yandex-button-item">Выставить счет в AlfaClick</button>
+        <button class="sale-paysystem-yandex-button-item"><?= Loc::getMessage('hutkigrosh_alfaclick_label') ?></button>
     </div>
 </div>
 <script type="text/javascript" src="http://ajax.microsoft.com/ajax/jQuery/jquery-1.11.0.min.js"></script>
@@ -68,10 +68,10 @@ $hg->apiLogOut();
                 console.log(result);
                 if (result.trim() == 'ok') {
                     $('#hutkigroshmessage').remove();
-                    $('.webpayform').before('<div class="alert alert-info" id="hutkigroshmessage">Выставлен счет в системе AlfaClick</div>');
+                    $('.webpayform').before('<div class="alert alert-info" id="hutkigroshmessage"><?= Loc::getMessage("hutkigrosh_alfaclick_success_text") ?></div>');
                 } else {
                     $('#hutkigroshmessage').remove();
-                    $('.webpayform').before('<div class="alert alert-danger" id="hutkigroshmessage">Не удалось выставить счет в системе AlfaClick</div>');
+                    $('.webpayform').before('<div class="alert alert-danger" id="hutkigroshmessage"><?= Loc::getMessage("hutkigrosh_alfaclick_failed_text") ?></div>');
                 }
 
             });
@@ -160,6 +160,7 @@ function addBill(HootkiGrosh $hg, Order $order)
     if (!$billID) {
         $error = $hg->getError();
         $hg->apiLogOut(); // Завершаем сеанс
+        ShowError(Loc::getMessage("hutkigrosh_default_error_text"));
         throw new Exception('Error while connecting to ' . $hg->base_url . ": " . $error);
     }
     //сохраним billid для данного заказа, может быть есть более подходящее место чем поле COMMENTS?
