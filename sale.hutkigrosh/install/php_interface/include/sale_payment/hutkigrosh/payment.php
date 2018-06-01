@@ -133,9 +133,7 @@ function addBill(HootkiGrosh $hg, Order $order)
             $arItem['desc'] = $line_item['NAME'];
             $arItem['count'] = round($line_item['QUANTITY']);
             $arItem['amt'] = $line_item['QUANTITY'] * $line_item['PRICE'];
-            $orderCurrency = isset($orderCurrency) ? $orderCurrency : $arItem['CURRENCY'];
-            if ($orderCurrency != $arItem['CURRENCY'])
-                throw new Exception('Multicurrency orders are not allowd'); //TODO со временем можно сделать выставление разных счетов
+            $orderCurrency = isset($orderCurrency) ? $orderCurrency : $line_item['CURRENCY']; //TODO со временем можно сделать выставление разных счетов
             $totalSummOrder += $arItem['amt'];
             $arItems[] = $arItem;
             unset($arItem);
