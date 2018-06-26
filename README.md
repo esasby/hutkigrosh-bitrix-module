@@ -14,9 +14,9 @@
 2. Распакуйте архив в папку 
 ```/bitrix/modules/```
 После распаковки должна появиться папка 
-```/bitrix/modules/sale.hutkigrosh```
+```/bitrix/modules/esasby.hutkigrosh```
 3. Перейти на страницу _Marketplace > Установленные решения_ (/bitrix/admin/partner_modules.php)
-4. В контекстном меню решения sale.hutkigrosh выбрать "Установить".
+4. В контекстном меню решения esasby.hutkigrosh выбрать "Установить".
 
 ## Инструкция по настройке
 1. Перейти на страницу _Магазин > Настройки > Платежные системы_ (/bitrix/admin/sale_pay_system.php)

@@ -8,27 +8,21 @@ $psDescription = GetMessage("SPCP_DDESCR");
 
 
 $arPSCorrespondence = array(
-    "ERIP" => array(
-        "NAME" =>GetMessage("HG_ERIP"),
-        "DESCR" => GetMessage("HG_ERIP_DESC"),
-        "VALUE" => "",
-        "TYPE" => ""
-    ),
-    "LOGIN" => array(
-        "NAME" => GetMessage("HG_LOGIN"),
-        "DESCR" => GetMessage("HG_LOGIN_DESC"),
-        "VALUE" => "",
-        "TYPE" => ""
-    ),
-    "PWD" => array(
-        "NAME" => GetMessage("HG_PWD"),
-        "DESCR" => GetMessage("HG_PWD_DESC"),
-        "VALUE" => "",
-        "TYPE" => ""
-    ),
     "SANDBOX" => array(
         "NAME" => GetMessage("HG_SANDBOX"),
         "DESCR" => GetMessage("HG_SANDBOX_DESC"),
+        "VALUE" => "1",
+        "TYPE" => ""
+    ),
+    "ALFACLICK_BUTTON" => array(
+        "NAME" => GetMessage("HG_ALFACLICK_BUTTON"),
+        "DESCR" => GetMessage("HG_ALFACLICK_BUTTON_DESC"),
+        "VALUE" => "1",
+        "TYPE" => ""
+    ),
+    "WEBPAY_BUTTON" => array(
+        "NAME" => GetMessage("HG_WEBPAY_BUTTON"),
+        "DESCR" => GetMessage("HG_WEBPAY_BUTTON_DESC"),
         "VALUE" => "1",
         "TYPE" => ""
     ),
@@ -47,6 +41,24 @@ $arPSCorrespondence = array(
     "NOTIFY_BY_EMAIL" => array(
         "NAME" => GetMessage("HG_NOTIFY_BY_EMAIL"),
         "DESCR" => GetMessage("HG_NOTIFY_BY_EMAIL_DESC"),
+        "VALUE" => "",
+        "TYPE" => ""
+    ),
+    "PWD" => array(
+        "NAME" => GetMessage("HG_PWD"),
+        "DESCR" => GetMessage("HG_PWD_DESC"),
+        "VALUE" => "",
+        "TYPE" => ""
+    ),
+    "LOGIN" => array(
+        "NAME" => GetMessage("HG_LOGIN"),
+        "DESCR" => GetMessage("HG_LOGIN_DESC"),
+        "VALUE" => "",
+        "TYPE" => ""
+    ),
+    "ERIP" => array(
+        "NAME" => GetMessage("HG_ERIP"),
+        "DESCR" => GetMessage("HG_ERIP_DESC"),
         "VALUE" => "",
         "TYPE" => ""
     )

@@ -24,4 +24,10 @@ $MESS["HG_NOTIFY_BY_PHONE_DESC"] = "0 - оповещение выключено,
 
 $MESS["HG_NOTIFY_BY_EMAIL"] = "Включить оповещения клиента по email (через ХуткiГрош)";
 $MESS["HG_NOTIFY_BY_EMAIL_DESC"] = "0 - оповещение выключено, 1 - оповещение включено";
+
+$MESS["HG_ALFACLICK_BUTTON"] = "Добавить кнопку Alfaclick";
+$MESS["HG_ALFACLICK_BUTTON_DESC"] = "0 - кнопка выключена, 1 - кнопка включена";
+
+$MESS["HG_WEBPAY_BUTTON"] = "Добавить кнопку Webpay";
+$MESS["HG_WEBPAY_BUTTON_DESC"] = "0 - кнопка выключена, 1 - кнопка включена";
 ?>

@@ -3,6 +3,7 @@ use Bitrix\Sale\Order;
 use Esas\HootkiGrosh\HGConfig;
 use Esas\HootkiGrosh\HootkiGrosh;
 use Esas\HootkiGrosh\WebPayRq;
+
 Loc::loadMessages(__FILE__);
 
 \Bitrix\Main\Page\Asset::getInstance()->addCss("/bitrix/themes/.default/sale.css");
@@ -20,20 +21,23 @@ $order = Order::load($GLOBALS["SALE_INPUT_PARAMS"]["ORDER"]["ID"]);
 $billID = $order->getField("COMMENTS");
 if (empty($billID))
     $billID = addBill($hg, $order);
-$webPayRq = new WebPayRq();
-$webPayRq->billId = $billID;
-// путь формируется некорректно, если оплату выполнять через личный кабинет
-$url = (CMain::IsHTTPS() ? "https" : "http")."://".((defined("SITE_SERVER_NAME") && strlen(SITE_SERVER_NAME) > 0) ? SITE_SERVER_NAME : COption::GetOptionString("main", "server_name", "")) . $APPLICATION->GetCurUri();
-$webPayRq->returnUrl = $url."&webpay_status=payed";
-$webPayRq->cancelReturnUrl = $url."&webpay_status=failed";
 
-$webpayform = $hg->apiWebPay($webPayRq);
-$hg->apiLogOut();
+if (CSalePaySystemAction::GetParamValue("WEBPAY_BUTTON")) {
+    $webPayRq = new WebPayRq();
+    $webPayRq->billId = $billID;
+// путь формируется некорректно, если оплату выполнять через личный кабинет
+    $url = (CMain::IsHTTPS() ? "https" : "http") . "://" . ((defined("SITE_SERVER_NAME") && strlen(SITE_SERVER_NAME) > 0) ? SITE_SERVER_NAME : COption::GetOptionString("main", "server_name", "")) . $APPLICATION->GetCurUri();
+    $webPayRq->returnUrl = $url . "&webpay_status=payed";
+    $webPayRq->cancelReturnUrl = $url . "&webpay_status=failed";
+
+    $webpayform = $hg->apiWebPay($webPayRq);
+    $hg->apiLogOut();
+}
 
 ?>
 <div class="sale-paysystem-wrapper">
 	<span class="tablebodytext">
-		<?= Loc::getMessage('hutkigrosh_success_text', array("#ORDER_ID#" => $order->getId(), "#ERIP_TREE_PATH#" => trim(htmlspecialchars(CSalePaySystemAction::GetParamValue("ERIP_TREE_PATH"))))); ?>
+		<?= Loc::getMessage('hutkigrosh_success_text', array("#ORDER_ID#" => getOrderId($order), "#ERIP_TREE_PATH#" => trim(htmlspecialchars(CSalePaySystemAction::GetParamValue("ERIP_TREE_PATH"))))); ?>
 	</span>
     <?php if ($_REQUEST['webpay_status'] == 'payed') { ?>
         <div class="alert alert-info"
@@ -42,14 +46,19 @@ $hg->apiLogOut();
         <div class="alert alert-danger"
              id="hutkigroshmessage"><?= Loc::getMessage('hutkigrosh_webpay_failed_text') ?></div>
     <?php } ?>
-    <div class="webpayform">
-        <?= $webpayform; ?>
-    </div>
-    <div class="alfaclick">
-        <input type="text" maxlength="20" name="phone" value="<?= $GLOBALS["SALE_INPUT_PARAMS"]['PROPERTY']['PHONE'] ?>"
-               id="phone">
-        <button class="sale-paysystem-yandex-button-item"><?= Loc::getMessage('hutkigrosh_alfaclick_label') ?></button>
-    </div>
+    <?php if (CSalePaySystemAction::GetParamValue("WEBPAY_BUTTON")) { ?>
+        <div class="webpayform">
+            <?= $webpayform; ?>
+        </div>
+    <?php } ?>
+    <?php if (CSalePaySystemAction::GetParamValue("ALFACLICK_BUTTON")) { ?>
+        <div class="alfaclick">
+            <input type="text" maxlength="20" name="phone"
+                   value="<?= $GLOBALS["SALE_INPUT_PARAMS"]['PROPERTY']['PHONE'] ?>"
+                   id="phone">
+            <button class="sale-paysystem-yandex-button-item"><?= Loc::getMessage('hutkigrosh_alfaclick_label') ?></button>
+        </div>
+    <?php } ?>
 </div>
 <script type="text/javascript" src="http://ajax.microsoft.com/ajax/jQuery/jquery-1.11.0.min.js"></script>
 <script>
@@ -81,6 +90,16 @@ $hg->apiLogOut();
 
 </script>
 <?
+
+function getOrderid(Order $order)
+{
+    // если включен шаблон генерации номера заказа, то подставляем этот номер
+    if (!empty($order->getField('ACCOUNT_NUMBER'))) {
+        return $order->getField('ACCOUNT_NUMBER');
+    } else {
+        return $order->getId();
+    }
+}
 
 function addBill(HootkiGrosh $hg, Order $order)
 {
@@ -134,7 +153,6 @@ function addBill(HootkiGrosh $hg, Order $order)
             $arItem['count'] = round($line_item['QUANTITY']);
             $arItem['amt'] = $line_item['QUANTITY'] * $line_item['PRICE'];
             $orderCurrency = isset($orderCurrency) ? $orderCurrency : $line_item['CURRENCY']; //TODO со временем можно сделать выставление разных счетов
-            $totalSummOrder += $arItem['amt'];
             $arItems[] = $arItem;
             unset($arItem);
         }
@@ -142,12 +160,12 @@ function addBill(HootkiGrosh $hg, Order $order)
 
     $billNewRq = new \ESAS\HootkiGrosh\BillNewRq();
     $billNewRq->eripId = trim(htmlspecialchars(CSalePaySystemAction::GetParamValue("ERIP")));
-    $billNewRq->invId = $order->getId();
+    $billNewRq->invId = getOrderId($order);
     $billNewRq->fullName = $GLOBALS["SALE_INPUT_PARAMS"]['USER']['NAME'] . ' ' . $GLOBALS["SALE_INPUT_PARAMS"]['USER']['LAST_NAME'];
     $billNewRq->mobilePhone = $GLOBALS["SALE_INPUT_PARAMS"]['PROPERTY']['PHONE'];
     $billNewRq->email = $GLOBALS["SALE_INPUT_PARAMS"]['PROPERTY']['EMAIL'];
     $billNewRq->fullAddress = $GLOBALS["SALE_INPUT_PARAMS"]['PROPERTY']['CITY'] . ' ' . $GLOBALS["SALE_INPUT_PARAMS"]['PROPERTY']['ADDRESS'];
-    $billNewRq->amount = $totalSummOrder;
+    $billNewRq->amount = $order->getPrice();
     $billNewRq->notifyByEMail = (trim(htmlspecialchars(CSalePaySystemAction::GetParamValue("NOTIFY_BY_EMAIL"))) == 1 ? true : false);
     $billNewRq->notifyByMobilePhone = (trim(htmlspecialchars(CSalePaySystemAction::GetParamValue("NOTIFY_BY_PHONE"))) == 1 ? true : false);
     $billNewRq->currency = $orderCurrency;
