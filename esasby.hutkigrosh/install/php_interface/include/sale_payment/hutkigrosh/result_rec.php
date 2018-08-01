@@ -36,15 +36,19 @@ if (empty($hgBillInfo)) {
         && $localOrderInfo['PRICE'] != $hgBillInfo['amt']) {
         throw new Exception("Unmapped purchaseid");
     }
-    if ($localOrderInfo["ID"] > 0 && $localOrderInfo["PAYED"] != "Y") {
-
+    if ($localOrderInfo["PAYED"] == "Y")
+        echo "Status already changed";
+    elseif ($hgBillInfo["statusEnum"] != "Payed")
+        echo "Bill is not payed!";
+    elseif ($localOrderInfo["ID"] > 0) {
         CSaleOrder::PayOrder($localOrderInfo["ID"], "Y");
         $fields = array("STATUS_ID" => "P",
             "PAYED" => "Y"
         );
         CSaleOrder::Update($localOrderInfo["ID"], $fields);
         echo "OK";
-    }
+    } else
+        echo "ERROR";
 }
 
 die();

@@ -76,7 +76,7 @@ class HootkiGrosh
             self::$cookies_file = 'cookies-' . time() . '.txt';
         }
 
-        $this->setCookiesDir(dirname(__FILE__));
+        $this->setCookiesDir(dirname(__FILE__) . DIRECTORY_SEPARATOR . "cookies");
     }
 
     /**
@@ -87,11 +87,10 @@ class HootkiGrosh
     public function setCookiesDir($dir)
     {
         $dir = rtrim($dir, '\\/');
-        if (is_dir($dir)) {
-            $this->cookies_dir = $dir;
-        } else {
-            $this->cookies_dir = dirname(__FILE__);
+        if (!is_dir($dir) && !mkdir($dir)) {
+            throw new Exception("Can not create dir[" . $dir . "]");
         }
+        $this->cookies_dir = $dir;
     }
 
     /**
