@@ -50,6 +50,7 @@ Logger::configure(array(
     )
 ));
 
+// функция перенесена из .description.php, т.к. при объявлении ее там возникает Exception (PHP Fatal error: Cannot redeclare)
 function createConfigField($key, $defaultValue = null)
 {
     return array(

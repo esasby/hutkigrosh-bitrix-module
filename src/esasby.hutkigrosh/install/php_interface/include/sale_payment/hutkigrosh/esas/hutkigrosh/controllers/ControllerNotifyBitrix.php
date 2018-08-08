@@ -8,6 +8,7 @@ namespace esas\hutkigrosh\controllers;
  * Date: 22.03.2018
  * Time: 11:55
  */
+use Bitrix\Sale\Order;
 use CSaleOrder;
 use esas\hutkigrosh\wrappers\ConfigurationWrapperBitrix;
 use esas\hutkigrosh\wrappers\OrderWrapperBitrix;
@@ -25,16 +26,25 @@ class ControllerNotifyBitrix extends ControllerNotify
 
     /**
      * По локальному идентификатору заказа возвращает wrapper
-     * @param $orderId
+     * @param $orderNumber
      * @return \esas\hutkigrosh\wrappers\OrderWrapper
+     * @throws \Bitrix\Main\ArgumentNullException
+     * @throws \Bitrix\Main\NotImplementedException
      */
     public function getOrderWrapperByOrderNumber($orderNumber)
     {
         // первым делом пытаемся получить заказ по account_number (случай, когда в магазине включен шаблон генерации номер счета)
         $orderByAccount = \Bitrix\Sale\Order::loadByAccountNumber($orderNumber);
-        // т.к. нам нужен массив, а не объект \Bitrix\Sale\Order загружаем массив по id.
-        // если по account_number заказ не был найден, то пытаемся закгрузить по invId
-        $localOrderInfo = CSaleOrder::GetByID(!empty($orderByAccount) ? $orderByAccount->getId() : $orderNumber);
-        return empty($order) ? null : new OrderWrapperBitrix($order);
+        if ($orderByAccount == null)
+            $orderByAccount = Order::load($orderNumber);
+        return new OrderWrapperBitrix($orderByAccount);
     }
+
+    public function onStatusPayed()
+    {
+        parent::onStatusPayed();
+        CSaleOrder::Update($this->localOrderWrapper->getOrderId(), array("PAYED" => "Y"));
+        CSaleOrder::PayOrder($this->localOrderWrapper->getOrderId(), "Y");
+    }
+
 }

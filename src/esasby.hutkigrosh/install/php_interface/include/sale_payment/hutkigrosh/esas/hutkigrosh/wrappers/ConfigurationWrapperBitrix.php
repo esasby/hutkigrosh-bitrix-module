@@ -4,7 +4,6 @@ namespace esas\hutkigrosh\wrappers;
 
 use Bitrix\Main\Config\Option;
 use CSalePaySystemAction;
-use Logger;
 
 /**
  * Created by PhpStorm.
@@ -94,18 +93,20 @@ class ConfigurationWrapperBitrix extends ConfigurationWrapper
         return $this->checkOn(self::CONFIG_HG_SMS_NOTIFICATION);
     }
 
-    /**
-     * Итоговый текст, отображаемый клменту после успешного выставления счета
-     * Получаем из БД текст успешного выставления счета
-     * В отличие от других CMS Joomls не может хранить его прямо в параметрах модуля.
-     * Для больших текстов (с html) используется отдельная таблица
-     * @return string
-     */
     public function getCompletionText()
     {
-        $statictext = JSFactory::getTable("statictext", "jshop");
-        $rowstatictext = $statictext->loadData("order_hg_completion_text");
-        return $this->warnIfEmpty($rowstatictext->text);
+        return "<p>Счет №<b>@order_number</b> успешно выставлен в ЕРИП.
+Вы можете оплатить его наличными деньгами, пластиковой карточкой и электронными деньгами, в любом из отделений банков, кассах, банкоматах, платежных терминалах, в системе электронных денег, через Интернет-банкинг, М-банкинг, интернет-эквайринг
+Для оплаты счета в ЕРИП необходимо: </p>
+<div class='erip-steps'>
+    <ol>
+        <li>Выбрать пункт <b>Система 'Расчет' (ЕРИП)</b> </li>
+        <li>Выбрать последовательно вкладки: <b>#ERIP_TREE_PATH#</b></li> 
+        <li>Ввести номер заказа <b>@order_number</b></li>
+        <li>Проверить корректность информации</li>
+        <li>Совершить платеж</li>.
+    </ol>
+</div>";
     }
 
     /**
@@ -146,7 +147,7 @@ class ConfigurationWrapperBitrix extends ConfigurationWrapper
 
     private function checkOn($key)
     {
-        $value = $this->pmconfigs[$key];
+        $value = $this->getOption($key);
         return $value == '1' || $value == "true";
     }
 

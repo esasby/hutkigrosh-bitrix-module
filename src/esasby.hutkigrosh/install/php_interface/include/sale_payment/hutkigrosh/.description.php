@@ -12,6 +12,10 @@ $psTitle = GetMessage("SPCP_DTITLE");
 $psDescription = GetMessage("SPCP_DDESCR");
 
 $arPSCorrespondence = array(
+    ConfigurationWrapper::CONFIG_HG_BILL_STATUS_PAYED => createConfigField(ConfigurationWrapper::CONFIG_HG_BILL_STATUS_PAYED, "N"),
+    ConfigurationWrapper::CONFIG_HG_BILL_STATUS_CANCELED => createConfigField(ConfigurationWrapper::CONFIG_HG_BILL_STATUS_CANCELED, "N"),
+    ConfigurationWrapper::CONFIG_HG_BILL_STATUS_FAILED => createConfigField(ConfigurationWrapper::CONFIG_HG_BILL_STATUS_FAILED, "N"),
+    ConfigurationWrapper::CONFIG_HG_BILL_STATUS_PENDING => createConfigField(ConfigurationWrapper::CONFIG_HG_BILL_STATUS_PENDING, "N"),
     ConfigurationWrapper::CONFIG_HG_SANDBOX => createConfigField(ConfigurationWrapper::CONFIG_HG_SANDBOX, 1),
     ConfigurationWrapper::CONFIG_HG_ALFACLICK_BUTTON => createConfigField(ConfigurationWrapper::CONFIG_HG_ALFACLICK_BUTTON, 1),
     ConfigurationWrapper::CONFIG_HG_WEBPAY_BUTTON => createConfigField(ConfigurationWrapper::CONFIG_HG_WEBPAY_BUTTON, 1),

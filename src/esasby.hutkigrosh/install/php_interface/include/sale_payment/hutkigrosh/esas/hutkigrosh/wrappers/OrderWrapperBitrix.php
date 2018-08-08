@@ -3,7 +3,6 @@
 namespace esas\hutkigrosh\wrappers;
 
 use Bitrix\Sale\Order;
-use CSaleBasket;
 use CSaleOrder;
 
 /**
@@ -24,7 +23,6 @@ class OrderWrapperBitrix extends OrderWrapper
     public function __construct(Order $order)
     {
         $this->order = $order;
-
     }
 
     /**
@@ -50,7 +48,7 @@ class OrderWrapperBitrix extends OrderWrapper
      */
     public function getFullName()
     {
-        return $GLOBALS["SALE_INPUT_PARAMS"]['USER']['NAME'] . ' ' . $GLOBALS["SALE_INPUT_PARAMS"]['USER']['LAST_NAME'];
+        return $this->order->getPropertyCollection()->getPayerName()->getValue();
     }
 
     /**
@@ -60,7 +58,7 @@ class OrderWrapperBitrix extends OrderWrapper
      */
     public function getMobilePhone()
     {
-        return $GLOBALS["SALE_INPUT_PARAMS"]['PROPERTY']['PHONE'];
+        return $this->order->getPropertyCollection()->getPhone()->getValue();
     }
 
     /**
@@ -70,7 +68,7 @@ class OrderWrapperBitrix extends OrderWrapper
      */
     public function getEmail()
     {
-        return $GLOBALS["SALE_INPUT_PARAMS"]['PROPERTY']['EMAIL'];
+        return $this->order->getPropertyCollection()->getUserEmail()->getValue();
     }
 
     /**
@@ -79,7 +77,7 @@ class OrderWrapperBitrix extends OrderWrapper
      */
     public function getAddress()
     {
-        return $GLOBALS["SALE_INPUT_PARAMS"]['PROPERTY']['CITY'] . ' ' . $GLOBALS["SALE_INPUT_PARAMS"]['PROPERTY']['ADDRESS'];
+        return $this->order->getPropertyCollection()->getAddress()->getValue();
     }
 
     /**
@@ -109,50 +107,9 @@ class OrderWrapperBitrix extends OrderWrapper
     {
         if ($this->products != null)
             return $this->products;
-        //выберем все товары из корзины
-        $arBasketItems = array();
-        $dbBasketItems = CSaleBasket::GetList(
-            array(
-                "NAME" => "ASC",
-                "ID" => "ASC"
-            ),
-            array(
-                "FUSER_ID" => CSaleBasket::GetBasketUserID(),
-                "LID" => SITE_ID,
-                "ORDER_ID" => $this->getOrderId()
-            ),
-            false,
-            false,
-            array("ID",
-                "NAME",
-                "CALLBACK_FUNC",
-                "MODULE",
-                "PRODUCT_ID",
-                "QUANTITY",
-                "DELAY",
-                "CAN_BUY",
-                "PRICE",
-                "CURRENCY",
-                "WEIGHT")
-        );
-        //TODO WTF?
-        while ($arItems = $dbBasketItems->Fetch()) {
-            if (strlen($arItems["CALLBACK_FUNC"]) > 0) {
-                CSaleBasket::UpdatePrice($arItems["ID"],
-                    $arItems["CALLBACK_FUNC"],
-                    $arItems["MODULE"],
-                    $arItems["PRODUCT_ID"],
-                    $arItems["QUANTITY"]);
-                $arItems = CSaleBasket::GetByID($arItems["ID"]);
-            }
-            $arBasketItems[] = $arItems;
-        }
-
-
-        if (is_array($arBasketItems)) {
-            foreach ($arBasketItems as $line_item)
-                $this->products[] = new OrderProductWrapperBitrix($line_item);
-        }
+        $basket = $this->order->getBasket();
+        foreach ($basket->getOrderableItems() as $basketItem)
+            $this->products[] = new OrderProductWrapperBitrix($basketItem);
         return $this->products;
     }
 
@@ -171,27 +128,32 @@ class OrderWrapperBitrix extends OrderWrapper
      */
     public function getStatus()
     {
-        //TODO
-//        return $this->order->get('status');
+        return $this->order->getField("STATUS_ID");
     }
 
     /**
      * Обновляет статус заказа в БД
      * @param $newStatus
      * @return mixed
+     * @throws \Bitrix\Main\ArgumentException
      */
     public function updateStatus($newStatus)
     {
-        CSaleOrder::Update($this->getOrderId(), array("STATUS_ID" => $newStatus));
+        if (!empty($newStatus) && $this->getStatus() != $newStatus) {
+            CSaleOrder::Update($this->getOrderId(), array("STATUS_ID" => $newStatus));
+            $this->order->setField("STATUS_ID", $newStatus);
+        }
     }
 
     /**
      * Сохраняет привязку billid к заказу
      * @param $billId
      * @return mixed
+     * @throws \Bitrix\Main\ArgumentException
      */
     public function saveBillId($billId)
     {
         CSaleOrder::Update($this->getOrderId(), array("COMMENTS" => $billId));
+        $this->order->setField("COMMENTS", $billId);
     }
 }

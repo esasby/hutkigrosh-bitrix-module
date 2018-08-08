@@ -8,17 +8,19 @@
 
 namespace esas\hutkigrosh\wrappers;
 
+use Bitrix\Sale\BasketItem;
+
 class OrderProductWrapperBitrix extends OrderProductWrapper
 {
-    private $product;
+    private $basketItem;
 
     /**
      * OrderProductWrapperJoomshopping constructor.
      * @param $product
      */
-    public function __construct($product)
+    public function __construct(BasketItem $product)
     {
-        $this->product = $product;
+        $this->basketItem = $product;
     }
 
     /**
@@ -27,7 +29,7 @@ class OrderProductWrapperBitrix extends OrderProductWrapper
      */
     public function getInvId()
     {
-        return $this->product['ID'];
+        return $this->basketItem->getField('ID');
     }
 
     /**
@@ -36,7 +38,7 @@ class OrderProductWrapperBitrix extends OrderProductWrapper
      */
     public function getName()
     {
-        return $this->product['NAME'];
+        return $this->basketItem->getField('NAME');
     }
 
     /**
@@ -45,7 +47,7 @@ class OrderProductWrapperBitrix extends OrderProductWrapper
      */
     public function getCount()
     {
-        return round($this->product['QUANTITY']);
+        return round($this->basketItem->getField('QUANTITY'));
     }
 
     /**
@@ -54,6 +56,6 @@ class OrderProductWrapperBitrix extends OrderProductWrapper
      */
     public function getUnitPrice()
     {
-        return $this->product['QUANTITY'] * $this->product['PRICE'];
+        return $this->basketItem->getField('QUANTITY') * $this->basketItem->getField('PRICE');
     }
 }

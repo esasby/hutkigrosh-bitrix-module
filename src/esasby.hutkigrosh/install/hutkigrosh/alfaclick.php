@@ -4,7 +4,7 @@ use esas\hutkigrosh\controllers\ControllerAlfaclick;
 use esas\hutkigrosh\wrappers\ConfigurationWrapperBitrix;
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . '/bitrix/php_interface/include/sale_payment/hutkigrosh/hutkigrosh_api.php');
+require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/php_interface/include/sale_payment/hutkigrosh/SimpleAutoloader.php");
 
 if (!CModule::IncludeModule("sale")) return;
 

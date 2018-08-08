@@ -1,4 +1,4 @@
-<? use Bitrix\Main\Localization\Loc;
+<?
 use Bitrix\Sale\Order;
 use esas\hutkigrosh\controllers\ControllerAddBill;
 use esas\hutkigrosh\controllers\ControllerWebpayFormBitrix;
