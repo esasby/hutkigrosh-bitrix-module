@@ -4,6 +4,8 @@ namespace esas\hutkigrosh\wrappers;
 
 use Bitrix\Main\Config\Option;
 use CSalePaySystemAction;
+use esas\hutkigrosh\ConfigurationFields;
+use esas\hutkigrosh\lang\TranslatorBitrix;
 
 /**
  * Created by PhpStorm.
@@ -36,7 +38,7 @@ class ConfigurationWrapperBitrix extends ConfigurationWrapper
      */
     public function getShopName()
     {
-        return $this->getOption(self::CONFIG_HG_SHOP_NAME);
+        return $this->getOption(ConfigurationFields::SHOP_NAME);
     }
 
     /**
@@ -45,7 +47,7 @@ class ConfigurationWrapperBitrix extends ConfigurationWrapper
      */
     public function getHutkigroshLogin()
     {
-        return $this->getOption(self::CONFIG_HG_LOGIN, true);
+        return $this->getOption(ConfigurationFields::LOGIN, true);
     }
 
     /**
@@ -54,7 +56,7 @@ class ConfigurationWrapperBitrix extends ConfigurationWrapper
      */
     public function getHutkigroshPassword()
     {
-        return $this->getOption(self::CONFIG_HG_PASSWORD, true);
+        return $this->getOption(ConfigurationFields::PASSWORD, true);
     }
 
     /**
@@ -63,7 +65,7 @@ class ConfigurationWrapperBitrix extends ConfigurationWrapper
      */
     public function isSandbox()
     {
-        return $this->checkOn(self::CONFIG_HG_SANDBOX);
+        return $this->checkOn(ConfigurationFields::SANDBOX);
     }
 
     /**
@@ -72,7 +74,7 @@ class ConfigurationWrapperBitrix extends ConfigurationWrapper
      */
     public function getEripId()
     {
-        return $this->getOption(self::CONFIG_HG_ERIP_ID, true);
+        return $this->getOption(ConfigurationFields::ERIP_ID, true);
     }
 
     /**
@@ -81,7 +83,7 @@ class ConfigurationWrapperBitrix extends ConfigurationWrapper
      */
     public function isEmailNotification()
     {
-        return $this->checkOn(self::CONFIG_HG_EMAIL_NOTIFICATION);
+        return $this->checkOn(ConfigurationFields::EMAIL_NOTIFICATION);
     }
 
     /**
@@ -90,23 +92,12 @@ class ConfigurationWrapperBitrix extends ConfigurationWrapper
      */
     public function isSmsNotification()
     {
-        return $this->checkOn(self::CONFIG_HG_SMS_NOTIFICATION);
+        return $this->checkOn(ConfigurationFields::SMS_NOTIFICATION);
     }
 
     public function getCompletionText()
     {
-        return "<p>Счет №<b>@order_number</b> успешно выставлен в ЕРИП.
-Вы можете оплатить его наличными деньгами, пластиковой карточкой и электронными деньгами, в любом из отделений банков, кассах, банкоматах, платежных терминалах, в системе электронных денег, через Интернет-банкинг, М-банкинг, интернет-эквайринг
-Для оплаты счета в ЕРИП необходимо: </p>
-<div class='erip-steps'>
-    <ol>
-        <li>Выбрать пункт <b>Система 'Расчет' (ЕРИП)</b> </li>
-        <li>Выбрать последовательно вкладки: <b>#ERIP_TREE_PATH#</b></li> 
-        <li>Ввести номер заказа <b>@order_number</b></li>
-        <li>Проверить корректность информации</li>
-        <li>Совершить платеж</li>.
-    </ol>
-</div>";
+        return TranslatorBitrix::translate(ConfigurationFields::COMPLETION_TEXT . "_default");
     }
 
     /**
@@ -115,7 +106,7 @@ class ConfigurationWrapperBitrix extends ConfigurationWrapper
      */
     public function getBillStatusPending()
     {
-        return $this->getOption(self::CONFIG_HG_BILL_STATUS_PENDING, true);
+        return $this->getOption(ConfigurationFields::BILL_STATUS_PENDING, true);
     }
 
     /**
@@ -124,7 +115,7 @@ class ConfigurationWrapperBitrix extends ConfigurationWrapper
      */
     public function getBillStatusPayed()
     {
-        return $this->getOption(self::CONFIG_HG_BILL_STATUS_PAYED, true);
+        return $this->getOption(ConfigurationFields::BILL_STATUS_PAYED, true);
     }
 
     /**
@@ -133,7 +124,7 @@ class ConfigurationWrapperBitrix extends ConfigurationWrapper
      */
     public function getBillStatusFailed()
     {
-        return $this->getOption(self::CONFIG_HG_BILL_STATUS_FAILED, true);
+        return $this->getOption(ConfigurationFields::BILL_STATUS_FAILED, true);
     }
 
     /**
@@ -142,7 +133,7 @@ class ConfigurationWrapperBitrix extends ConfigurationWrapper
      */
     public function getBillStatusCanceled()
     {
-        return $this->getOption(self::CONFIG_HG_BILL_STATUS_CANCELED, true);
+        return $this->getOption(ConfigurationFields::BILL_STATUS_CANCELED, true);
     }
 
     private function checkOn($key)
@@ -167,7 +158,7 @@ class ConfigurationWrapperBitrix extends ConfigurationWrapper
      */
     public function isAlfaclickButtonEnabled()
     {
-        return $this->checkOn(self::CONFIG_HG_ALFACLICK_BUTTON);
+        return $this->checkOn(ConfigurationFields::ALFACLICK_BUTTON);
     }
 
     /**
@@ -176,7 +167,7 @@ class ConfigurationWrapperBitrix extends ConfigurationWrapper
      */
     public function isWebpayButtonEnabled()
     {
-        return $this->checkOn(self::CONFIG_HG_WEBPAY_BUTTON);
+        return $this->checkOn(ConfigurationFields::WEBPAY_BUTTON);
     }
 
     public function getOption($key, bool $warn = false)
@@ -195,5 +186,24 @@ class ConfigurationWrapperBitrix extends ConfigurationWrapper
     public function getPaymentMethodName()
     {
         // TODO: Implement getPaymentMethodName() method.
+    }
+
+    /**
+     * Какой срок действия счета после его выставления (в днях)
+     * @return string
+     */
+    public function getDueInterval()
+    {
+        return $this->getNumeric($this->getOption(ConfigurationFields::DUE_INTERVAL, true), "1");
+    }
+
+    /***
+     * В некоторых CMS не получается в настройках хранить html, поэтому использует текст итогового экрана по умолчанию,
+     * в который проставлятся значение ERIPPATh
+     * @return string
+     */
+    public function getEripPath()
+    {
+        return $this->getOption(ConfigurationFields::ERIP_PATH, true);
     }
 }
