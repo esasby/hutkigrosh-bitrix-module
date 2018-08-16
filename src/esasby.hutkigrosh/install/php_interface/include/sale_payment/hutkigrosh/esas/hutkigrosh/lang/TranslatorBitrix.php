@@ -11,20 +11,19 @@ use Bitrix\Main\Localization\Loc;
  * Date: 10.07.2018
  * Time: 11:45
  */
-class TranslatorBitrix
+class TranslatorBitrix extends Translator
 {
-    private static $locale = null;
+    private $locale = null;
 
-    public static function translate($msg)
+    public function getLocale()
     {
-        if (null === self::$locale) {
+        if (null === $this->locale) {
             $context = Context::getCurrent();
             if ($context !== null) {
-                self::$locale = $context->getLanguage() . "_" . strtoupper($context->getLanguage());
+                $this->locale = $context->getLanguage() . "_" . strtoupper($context->getLanguage());
             } else {
-                self::$locale = "ru_RU";
+                $this->locale = "ru_RU";
             }
         }
-        return Translator::translate($msg, self::$locale);
     }
 }

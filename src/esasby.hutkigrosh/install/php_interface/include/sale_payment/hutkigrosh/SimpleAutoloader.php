@@ -1,6 +1,7 @@
 <?php
 
 use esas\hutkigrosh\lang\TranslatorBitrix;
+use esas\hutkigrosh\utils\LoggerDefault;
 
 require_once(dirname(__FILE__) . '/vendor/autoload.php');
 
@@ -28,35 +29,16 @@ class SimpleAutoloader
 
 spl_autoload_register('SimpleAutoloader::loader');
 
-Logger::configure(array(
-    'rootLogger' => array(
-        'appenders' => array('fileAppender'),
-        'level' => 'INFO',
-    ),
-    'appenders' => array(
-        'fileAppender' => array(
-            'class' => 'LoggerAppenderFile',
-            'layout' => array(
-                'class' => 'LoggerLayoutPattern',
-                'params' => array(
-                    'conversionPattern' => '%date{Y-m-d H:i:s,u} | %logger{0} | %-5level | %msg %n%throwable',
-                )
-            ),
-            'params' => array(
-                'file' => $_SERVER["DOCUMENT_ROOT"] . '/hutkigrosh.log',
-                'append' => true
-            )
-        )
-    )
-));
+LoggerDefault::init();
 
 // функция перенесена из .description.php, т.к. при объявлении ее там возникает Exception (PHP Fatal error: Cannot redeclare)
 function createConfigField($key, $defaultValue = null)
 {
+    $translator = new TranslatorBitrix();
     return array(
-        "NAME" => TranslatorBitrix::translate($key),
-        "DESCR" => TranslatorBitrix::translate($key . "_desc"),
-        "VALUE" => $defaultValue != null ? $defaultValue : "",
+        "NAME" => $translator->getConfigFieldName($key),
+        "DESCR" => $translator->getConfigFieldDescription($key),
+        "VALUE" => $defaultValue != null ? $defaultValue : $translator->getConfigFieldDefault($key),
         "TYPE" => ""
     );
 }

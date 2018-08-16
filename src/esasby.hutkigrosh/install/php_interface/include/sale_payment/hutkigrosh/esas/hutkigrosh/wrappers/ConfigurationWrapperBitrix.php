@@ -24,7 +24,7 @@ class ConfigurationWrapperBitrix extends ConfigurationWrapper
      */
     public function __construct()
     {
-        parent::__construct();
+        parent::__construct(new TranslatorBitrix());
         //получаем параметры платежной системы
         //может быть есть возможность сделать это как-то более красиво?
         $psId = (int)Option::get('esasby.hutkigrosh', "PAY_SYSTEM_ID");
@@ -97,7 +97,7 @@ class ConfigurationWrapperBitrix extends ConfigurationWrapper
 
     public function getCompletionText()
     {
-        return TranslatorBitrix::translate(ConfigurationFields::COMPLETION_TEXT . "_default");
+        return $this->translator->getConfigFieldDefault(ConfigurationFields::COMPLETION_TEXT);
     }
 
     /**
