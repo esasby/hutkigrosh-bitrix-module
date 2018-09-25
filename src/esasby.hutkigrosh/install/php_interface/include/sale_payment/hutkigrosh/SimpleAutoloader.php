@@ -1,7 +1,7 @@
 <?php
 
 use esas\hutkigrosh\lang\TranslatorBitrix;
-use esas\hutkigrosh\utils\LoggerDefault;
+use esas\hutkigrosh\utils\Logger;
 
 require_once(dirname(__FILE__) . '/vendor/autoload.php');
 
@@ -29,7 +29,7 @@ class SimpleAutoloader
 
 spl_autoload_register('SimpleAutoloader::loader');
 
-LoggerDefault::init();
+Logger::init();
 
 // функция перенесена из .description.php, т.к. при объявлении ее там возникает Exception (PHP Fatal error: Cannot redeclare)
 function createConfigField($key, $defaultValue = null)

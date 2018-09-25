@@ -170,7 +170,7 @@ class ConfigurationWrapperBitrix extends ConfigurationWrapper
         return $this->checkOn(ConfigurationFields::WEBPAY_BUTTON);
     }
 
-    public function getOption($key, bool $warn = false)
+    public function getOption($key, $warn = false)
     {
         $value = trim(htmlspecialchars($this->params[$key]['VALUE']));
         if ($warn)

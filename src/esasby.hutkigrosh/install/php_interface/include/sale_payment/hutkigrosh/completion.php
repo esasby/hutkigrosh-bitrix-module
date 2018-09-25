@@ -10,10 +10,10 @@
         <?php if ($configurationWrapper->isWebpayButtonEnabled()) { ?>
             <?php if ($webpay_status and $webpay_status == 'payed') { ?>
             <div class="alert alert-info"
-                 id="hutkigrosh_message"><?= $translator->translate('hutkigrosh_webpay_msg_payed') ?></div>
+                 id="hutkigrosh_message"><?= $translator->translate('hutkigrosh_webpay_msg_success') ?></div>
         <?php } elseif ($webpay_status and $webpay_status == 'failed') { ?>
             <div class="alert alert-danger"
-                 id="hutkigrosh_message"><?= $translator->translate('hutkigrosh_webpay_msg_failed') ?></div>
+                 id="hutkigrosh_message"><?= $translator->translate('hutkigrosh_webpay_msg_unsuccess') ?></div>
         <?php } ?>
             <div id="webpay">
                 <?php echo $webpay_form ?>

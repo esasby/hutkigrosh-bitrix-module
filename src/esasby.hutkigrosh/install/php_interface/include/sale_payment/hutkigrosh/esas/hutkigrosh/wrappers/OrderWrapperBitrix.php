@@ -4,6 +4,7 @@ namespace esas\hutkigrosh\wrappers;
 
 use Bitrix\Sale\Order;
 use CSaleOrder;
+use esas\hutkigrosh\lang\TranslatorBitrix;
 
 /**
  * Created by PhpStorm.
@@ -22,6 +23,7 @@ class OrderWrapperBitrix extends OrderWrapper
      */
     public function __construct(Order $order)
     {
+        parent::__construct(new TranslatorBitrix());
         $this->order = $order;
     }
 
@@ -40,7 +42,6 @@ class OrderWrapperBitrix extends OrderWrapper
         $accountNumber = $this->order->getField('ACCOUNT_NUMBER');
         return !empty($accountNumber) ? $accountNumber : $this->getOrderId();
     }
-
 
     /**
      * Полное имя покупателя
@@ -77,7 +78,13 @@ class OrderWrapperBitrix extends OrderWrapper
      */
     public function getAddress()
     {
-        return $this->order->getPropertyCollection()->getAddress()->getValue();
+        $address = $this->order->getPropertyCollection()->getAddress();
+        if ($address == null)
+            $address = $this->order->getPropertyCollection()->getDeliveryLocation();
+        if ($address != null)
+            $address->getValue();
+        else
+            return "";
     }
 
     /**

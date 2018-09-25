@@ -11,6 +11,7 @@ namespace esas\hutkigrosh\controllers;
 
 use CMain;
 use COption;
+use esas\hutkigrosh\lang\TranslatorBitrix;
 use esas\hutkigrosh\wrappers\ConfigurationWrapperBitrix;
 use esas\hutkigrosh\wrappers\OrderWrapper;
 
@@ -18,7 +19,7 @@ class ControllerWebpayFormBitrix extends ControllerWebpayForm
 {
     public function __construct(ConfigurationWrapperBitrix $configurationWrapper)
     {
-        parent::__construct($configurationWrapper);
+        parent::__construct($configurationWrapper, new TranslatorBitrix());
     }
 
     /**

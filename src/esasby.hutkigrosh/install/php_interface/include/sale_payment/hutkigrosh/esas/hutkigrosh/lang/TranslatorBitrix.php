@@ -11,7 +11,7 @@ use Bitrix\Main\Localization\Loc;
  * Date: 10.07.2018
  * Time: 11:45
  */
-class TranslatorBitrix extends Translator
+class TranslatorBitrix extends TranslatorImpl
 {
     private $locale = null;
 

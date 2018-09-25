@@ -9,6 +9,7 @@
 namespace esas\hutkigrosh\wrappers;
 
 use Bitrix\Sale\BasketItem;
+use esas\hutkigrosh\lang\TranslatorBitrix;
 
 class OrderProductWrapperBitrix extends OrderProductWrapper
 {
@@ -20,6 +21,7 @@ class OrderProductWrapperBitrix extends OrderProductWrapper
      */
     public function __construct(BasketItem $product)
     {
+        parent::__construct(new TranslatorBitrix());
         $this->basketItem = $product;
     }
 

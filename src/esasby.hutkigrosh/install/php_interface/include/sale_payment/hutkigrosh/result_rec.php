@@ -6,8 +6,12 @@ use esas\hutkigrosh\wrappers\ConfigurationWrapperBitrix;
 
 Loc::loadMessages(__FILE__);
 
-$billId = $_REQUEST['purchaseid'];
-$controller = new ControllerNotifyBitrix(new ConfigurationWrapperBitrix());
-$controller->process($billId);
+try {
+    $billId = $_REQUEST['purchaseid'];
+    $controller = new ControllerNotifyBitrix(new ConfigurationWrapperBitrix());
+    $controller->process($billId);
+} catch (Throwable $e) {
+    \esas\hutkigrosh\utils\Logger::getLogger("result")->error("Exception:", $e);
+}
 die();
 ?>

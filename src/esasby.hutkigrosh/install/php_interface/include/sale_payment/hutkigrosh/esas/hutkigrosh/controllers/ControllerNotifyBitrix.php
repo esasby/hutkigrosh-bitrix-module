@@ -10,6 +10,7 @@ namespace esas\hutkigrosh\controllers;
  */
 use Bitrix\Sale\Order;
 use CSaleOrder;
+use esas\hutkigrosh\lang\TranslatorBitrix;
 use esas\hutkigrosh\wrappers\ConfigurationWrapperBitrix;
 use esas\hutkigrosh\wrappers\OrderWrapperBitrix;
 
@@ -20,7 +21,7 @@ class ControllerNotifyBitrix extends ControllerNotify
      */
     public function __construct(ConfigurationWrapperBitrix $configurationWrapper)
     {
-        parent::__construct($configurationWrapper);
+        parent::__construct($configurationWrapper, new TranslatorBitrix());
     }
 
 
@@ -34,7 +35,7 @@ class ControllerNotifyBitrix extends ControllerNotify
     public function getOrderWrapperByOrderNumber($orderNumber)
     {
         // первым делом пытаемся получить заказ по account_number (случай, когда в магазине включен шаблон генерации номер счета)
-        $orderByAccount = \Bitrix\Sale\Order::loadByAccountNumber($orderNumber);
+        $orderByAccount = Order::loadByAccountNumber($orderNumber);
         if ($orderByAccount == null)
             $orderByAccount = Order::load($orderNumber);
         return new OrderWrapperBitrix($orderByAccount);
